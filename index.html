@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carbon-Aware CI/CD Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+      background: #f9fff9 url('https://upload.wikimedia.org/wikipedia/commons/1/19/Durga_Maa_image.png') no-repeat center top;
+      background-size: 200px auto;
+    }
+    h1 {
+      color: #2e7d32;
+    }
+    .dasara {
+      margin-top: 40px;
+      padding: 20px;
+      border: 2px dashed #ff9800;
+      border-radius: 10px;
+      display: inline-block;
+      background: #fff8e1;
+    }
+    .dasara h2 {
+      color: #e65100;
+      margin-bottom: 10px;
+    }
+    .emoji {
+      font-size: 2rem;
+    }
+    .savings {
+      margin-top: 30px;
+      font-size: 1.2rem;
+      color: #1b5e20;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌱 Carbon-Aware CI/CD Demo</h1>
+  <p>This page was deployed as part of our sustainability-focused DevOps pipeline.</p>
+
+  <div class="savings">
+    <p><strong>💡 Sustainability Impact:</strong></p>
+    <p id="savings-text">Loading CO₂ savings...</p>
+  </div>
+
+  <div class="dasara">
+    <h2>🌼 Happy Dasara! 🌼</h2>
+    <p>Wishing you joy, prosperity, and a sustainable future 🌍✨</p>
+    <div class="emoji">💚⚡🌱</div>
+  </div>
+
+  <script>
+    // Load savings.json if available
+    fetch("savings.json")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("savings-text").innerText = data.savings;
+      })
+      .catch(() => {
+        document.getElementById("savings-text").innerText = "No CO₂ savings calculated this run.";
+      });
+  </script>
+</body>
+</html>
