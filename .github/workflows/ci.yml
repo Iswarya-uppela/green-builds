@@ -36,14 +36,8 @@ jobs:
         id: carbon
         env:
           JOB_TYPE: ${{ github.event.inputs.job_type || 'flexible' }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
         run: python carbon_check.py
-
-      - name: Upload sustainability data
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: sustainability
-          path: sustainability.json
 
   deploy:
     needs: carbon-check
@@ -52,13 +46,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Download sustainability data
-        uses: actions/download-artifact@v4
-        with:
-          name: sustainability
-
-      - name: Deploy webpage to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy webpage + sustainability data
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
