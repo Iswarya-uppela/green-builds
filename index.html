@@ -9,11 +9,16 @@
       font-family: Arial, sans-serif;
       text-align: center;
       margin: 50px;
-      background: #f9fff9 url('https://upload.wikimedia.org/wikipedia/commons/1/19/Durga_Maa_image.png') no-repeat center top;
-      background-size: 200px auto;
+      background: #f9fff9;
     }
-    h1 {
-      color: #2e7d32;
+    h1 { color: #2e7d32; }
+    .impact {
+      margin-top: 30px;
+      padding: 15px;
+      border: 2px solid #4caf50;
+      border-radius: 10px;
+      display: inline-block;
+      background: #e8f5e9;
     }
     .dasara {
       margin-top: 40px;
@@ -27,23 +32,17 @@
       color: #e65100;
       margin-bottom: 10px;
     }
-    .emoji {
-      font-size: 2rem;
-    }
-    .savings {
-      margin-top: 30px;
-      font-size: 1.2rem;
-      color: #1b5e20;
-    }
+    .emoji { font-size: 2rem; }
   </style>
 </head>
 <body>
   <h1>🌱 Carbon-Aware CI/CD Demo</h1>
   <p>This page was deployed as part of our sustainability-focused DevOps pipeline.</p>
 
-  <div class="savings">
-    <p><strong>💡 Sustainability Impact:</strong></p>
-    <p id="savings-text">Loading CO₂ savings...</p>
+  <div class="impact">
+    <h2>💡 Sustainability Impact</h2>
+    <p>🌍 GreenOps Score: <b>{{SCORE}} / 100</b></p>
+    <p>💨 Estimated CO₂ Savings: <b>{{SAVINGS}}</b></p>
   </div>
 
   <div class="dasara">
@@ -51,17 +50,5 @@
     <p>Wishing you joy, prosperity, and a sustainable future 🌍✨</p>
     <div class="emoji">💚⚡🌱</div>
   </div>
-
-  <script>
-    // Load savings.json if available
-    fetch("savings.json")
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("savings-text").innerText = data.savings;
-      })
-      .catch(() => {
-        document.getElementById("savings-text").innerText = "No CO₂ savings calculated this run.";
-      });
-  </script>
 </body>
 </html>
