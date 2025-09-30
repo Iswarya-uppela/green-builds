@@ -1,6 +1,5 @@
 name: Carbon-Aware CI/CD
 
-# Required for gh-pages deploy (gives write access to repo)
 permissions:
   contents: write
 
@@ -40,12 +39,36 @@ jobs:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
         run: python carbon_check.py
 
+      - name: Upload sustainability data
+        uses: actions/upload-artifact@v3
+        with:
+          name: sustainability
+          path: sustainability.json
+
   deploy:
     needs: carbon-check
     if: success()
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Download sustainability data
+        uses: actions/download-artifact@v3
+        with:
+          name: sustainability
+
+      - name: Inject sustainability data into index.html
+        run: |
+          python - <<EOF
+          import json
+          with open("sustainability.json") as f:
+              data = json.load(f)
+          html = open("index.html").read()
+          html = html.replace("{{SCORE}}", str(data["score"]))
+          html = html.replace("{{SAVINGS}}", data["savings"])
+          with open("index.html", "w") as f:
+              f.write(html)
+          EOF
 
       - name: Deploy webpage to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
