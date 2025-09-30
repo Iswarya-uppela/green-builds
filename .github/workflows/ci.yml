@@ -1,0 +1,54 @@
+name: Carbon-Aware CI/CD
+
+# Required for gh-pages deploy (gives write access to repo)
+permissions:
+  contents: write
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      job_type:
+        description: "Select Job Type"
+        required: true
+        default: "flexible"
+        type: choice
+        options:
+          - urgent
+          - flexible
+
+jobs:
+  carbon-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Carbon Intensity Check
+        id: carbon
+        env:
+          JOB_TYPE: ${{ github.event.inputs.job_type || 'flexible' }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: python carbon_check.py
+
+  deploy:
+    needs: carbon-check
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy webpage to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
